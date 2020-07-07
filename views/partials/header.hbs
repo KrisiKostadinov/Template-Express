@@ -12,12 +12,23 @@
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
+        {{#if user }}
+        <li class="nav-item">
+          <a class="nav-link" href="#">Hi, <span class="sr-only"></span>{{ user }}</a>
+        </li>
+        <li class="nav-item">
+          <form action="/users/logout?_method=DELETE" method="POST">
+            <button class="btn btn-danger" type="submit">Logout</button>
+          </form>
+        </li>
+        {{else}}
         <li class="nav-item">
           <a class="nav-link" href="/users/login">Login <span class="sr-only"></span></a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/users/register">Register <span class="sr-only"></span></a>
         </li>
+        {{/if}}
       </ul>
     </div>
   </div>
