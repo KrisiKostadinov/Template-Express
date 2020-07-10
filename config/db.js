@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const url = 'mongodb://localhost:27017/' + process.env.DATABASE_SUBJECT;
+const url = process.env.DATABASE_CLOUD;
 
 module.exports = mongoose.connect(url, {
     useUnifiedTopology: true,

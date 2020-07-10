@@ -1,13 +1,13 @@
 const express = require('express');
-const mls = require('../config/mls');
+const restrictedPages = require('../config/auth');
 const router = express.Router();
 
-router.get('/', (req, res) => {
-    res.render('index', { title: 'Template Express' });
+router.get('/', restrictedPages.isAuth, (req, res) => {
+    res.render('index');
 });
 
-router.get('/about', mls.auth, (req, res) => {
-    res.render('about', { title: 'about', loaded: 'about' });
+router.get('/about', restrictedPages.isAuth, restrictedPages.authSuccess, (req, res) => {
+    res.render('about');
 });
 
 module.exports = router;

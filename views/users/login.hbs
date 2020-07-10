@@ -1,6 +1,6 @@
 <div class="forms mx-auto">
     <h2 class="text-center mt-4">Login</h2>
-    <p class="text-center text-danger">{{ error }}</p>
+    {{> messages }}
     <form action="/users/login" method="POST">
         <div class="form-group">
             <label for="email">Email address</label>

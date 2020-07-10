@@ -6,43 +6,45 @@ const config = require('dotenv').config();
 const db = require('./config/db');
 const session = require('express-session');
 const methodOverride = require('method-override');
-const bodyParser = require('body-parser');
-const mls = require('./config/mls');
+const cookieParser = require('cookie-parser');
+const flash = require('connect-flash');
+const passport = require('passport');
+
+require('./config/passport')(passport);
 
 const app = express();
 
 app.use(express.urlencoded({ extended: false }));
 
+app.use(cookieParser());
 app.use(methodOverride('_method'));
-
-app.use(bodyParser.urlencoded());
 
 app.engine('.hbs', exphbs({
     defaultLayout: 'main',
     extname: '.hbs'
 }));
 
-const { NAME_SESSION, SECRET_SESSION, EXPIRE_SESSION } = process.env;
-
 app.use(session({
-    name: NAME_SESSION,
-    secret: SECRET_SESSION,
+    secret: 'secret',
     resave: true,
-    saveUninitialized: true,
-    cookie: {
-        secure: false,
-        sameSite: true,
-        maxAge: Number(EXPIRE_SESSION),
-    }
-}));
+    saveUninitialized: true
+}))
+app.use(passport.initialize())
+app.use(passport.session())
+
+app.use(flash());
+
+app.use((req, res, next) => {
+    res.locals.error_msg = req.flash('error_msg');
+    res.locals.success_msg = req.flash('success_msg');
+    res.locals.error = req.flash('error');
+    next();
+});
 
 app.set('view engine', '.hbs');
 app.use("/public", express.static(__dirname + '/public'));
 
-app.use(mls.setUserData);
-
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-
 
 app.listen(process.env.PORT, () => console.log('Server listening on port: ' + 2000));
